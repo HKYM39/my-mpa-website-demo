@@ -1,0 +1,14 @@
+{
+  "name": "my-mpa-demo",
+  "version": "1.0.0",
+  "description": "MPA+SPA实践案例",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "hkym39@outlook.com",
+  "license": "ISC",
+  "packageManager": "pnpm@10.25.0",
+  "devDependencies": {
+    "biome": "^0.3.3"
+  }
+}
