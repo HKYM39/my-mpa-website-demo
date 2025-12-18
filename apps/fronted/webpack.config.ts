@@ -11,8 +11,12 @@ const config = {
 	mode: "development",
 	entry: "./src/main.tsx",
 	output: {
-		path: join(__dirname, "./dist"),
-		filename: "bundle.js",
+		filename: "bundle.[contenthash].js",
+		// 【关键点】：利用 path.resolve 跳出当前目录，指向后端的目录
+		// 这里的 ../backend/client 对应 NestJS 中配置的 rootPath
+		path: resolve(__dirname, "../backend/src/views"),
+		publicPath: "/",
+		clean: true,
 	},
 	module: {
 		rules: [

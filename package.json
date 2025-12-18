@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "description": "MPA+SPA实践案例",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "build:frontend": "pnpm --filter frontend build",
+    "build:backend": "pnpm --filter backend build",
+    "start:backend": "pnpm --filter backend start:dev",
+    "dev": "pnpm build:frontend && pnpm start:backend",
+    "build": "pnpm build:frontend && pnpm build:backend"
+  },
   "keywords": [],
   "author": "hkym39@outlook.com",
   "license": "ISC",
