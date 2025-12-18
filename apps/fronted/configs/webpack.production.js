@@ -13,6 +13,12 @@ module.exports = {
 			filename: "index.html",
 			favicon: "./public/react.svg",
 			template: resolve(__dirname, "../public/index-prod.html"),
+			cdn: {
+				js: [
+					"https://unpkg.com/react@18/umd/react.production.min.js",
+					"https://unpkg.com/react-dom@18/umd/react-dom.production.min.js",
+				],
+			},
 		}),
 	],
 };

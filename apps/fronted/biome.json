@@ -9,11 +9,6 @@
     "ignoreUnknown": true,
     "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
   },
-  "javascript": {
-    "parser": {
-      "unsafeParameterDecoratorsEnabled": true
-    }
-  },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
@@ -26,6 +21,10 @@
       "suspicious": {
         "noUnknownAtRules": "off"
       }
+    },
+    "domains": {
+      "next": "recommended",
+      "react": "recommended"
     }
   },
   "assist": {
@@ -34,17 +33,5 @@
         "organizeImports": "on"
       }
     }
-  },
-  "overrides": [
-    {
-      "includes": ["**/*.controller.ts", "**/*.service.ts"],
-      "linter": {
-        "rules": {
-          "style": {
-            "useImportType": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }

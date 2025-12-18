@@ -3,10 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import "./App.css";
 import type { UserVO } from "./types/user";
 
-const API_BASE =
-  (process.env.API_BASE_URL as string | undefined) ??
-  "http://localhost:3000/api";
-console.log("[ API_BASE ] >", API_BASE);
+const API_BASE = (process.env.API_BASE_URL as string | undefined) ?? "/api";
 
 function formatValue(value: unknown) {
   if (value === null || value === undefined || value === "") return "-";

@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import type { CreateUserDto } from './dto/create-user.dto';
 import type { UpdateUserDto } from './dto/update-user.dto';
-import { UsersService } from './users.service';
+// biome-ignore lint/style/useImportType: <explanation>
+import {UsersService} from './users.service';
 import type { UserVO } from './vo/user.vo';
 
 @Controller('users')

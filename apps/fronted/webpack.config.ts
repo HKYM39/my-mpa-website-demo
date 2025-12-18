@@ -5,6 +5,7 @@ const merge = require("webpack-merge");
 const _args = require("yargs-parser")(process.argv.slice(2));
 const _mode = _args.mode || "development";
 const _mergeConfig = require(`${__dirname}/configs/webpack.${_mode}.js`);
+const isDev = _mode === "development";
 
 const config = {
 	mode: "development",
@@ -27,8 +28,8 @@ const config = {
 							},
 							transform: {
 								react: {
-									runtime: "automatic", // ✅ React 17+ 必须
-									development: true,
+									runtime: "automatic",
+									development: isDev,
 								},
 							},
 						},
@@ -55,9 +56,7 @@ const config = {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			"process.env.API_BASE_URL": JSON.stringify(
-				process.env.API_BASE_URL || "http://localhost:3000/api",
-			),
+			"process.env.API_BASE_URL": JSON.stringify(process.env.API_BASE_URL),
 		}),
 	],
 };

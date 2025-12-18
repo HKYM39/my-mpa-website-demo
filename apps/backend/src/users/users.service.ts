@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+// biome-ignore lint/style/useImportType: <explanation>
 import { PrismaService } from "src/prisma/prisma.service";
 import type { User } from "src/generated/prisma/client";
 import type { CreateUserDto } from "./dto/create-user.dto";

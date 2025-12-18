@@ -3,7 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <% for (var js of htmlWebpackPlugin.options.cdn.js) { %>
+    <script src="<%= js %>"></script>
+    <% } %>
     <title>Demo</title>
   </head>
-  <body></body>
+  <body>
+    <div id="root" class="div"></div>
+  </body>
 </html>
