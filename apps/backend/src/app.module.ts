@@ -1,6 +1,4 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
 import { GithubController } from "./github/github.controller";
 import { UsersModule } from "./users/users.module";
 import { PrismaModule } from "./prisma/prisma.module";
@@ -28,7 +26,6 @@ const isDev = process.env.NODE_ENV !== "production";
 			},
 		}),
 	],
-	controllers: [AppController, GithubController],
-	providers: [AppService],
+	controllers: [GithubController],
 })
 export class AppModule {}

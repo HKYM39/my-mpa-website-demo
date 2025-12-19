@@ -1,0 +1,89 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: NestJS + Prisma backend on Lambda (with RDS via Secrets Manager)
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 15
+    MemorySize: 512
+    Architectures:
+      - "x86_64"
+    Environment:
+      Variables:
+        NODE_ENV: production
+
+Parameters:
+  StageName:
+    Type: String
+    Default: prod
+
+  DbSecretArn:
+    Type: String
+    Description: ARN of Secrets Manager secret which contains DATABASE_URL
+
+  VpcSubnetIds:
+    Type: CommaDelimitedList
+    Default: ""
+    Description: Private subnet IDs for Lambda to reach RDS (optional)
+
+  VpcSecurityGroupIds:
+    Type: CommaDelimitedList
+    Default: ""
+    Description: Security group IDs for Lambda (optional)
+
+Conditions:
+  HasVpcConfig: !Not
+    - !Equals
+      - !Select [0, !Ref VpcSubnetIds]
+      - ""
+
+Resources:
+  BackendDepsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: backend-deps-layer # 线上 layer 的名字
+      ContentUri: layer/ # 👈 本地目录
+      CompatibleRuntimes:
+        - nodejs20.x # 或 nodejs18.x，看你 Runtime
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: !Ref StageName
+
+  BackendFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub backend-${StageName}
+      CodeUri: apps/backend/dist # 注意：dist 目录
+      Handler: lambda.handler # dist/lambda.js 导出的 handler
+      Events:
+        Root:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /
+            Method: ANY
+        Proxy:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref HttpApi
+            Path: /{proxy+}
+            Method: ANY
+      Layers:
+        - !Ref BackendDepsLayer
+      Environment:
+        Variables:
+          DATABASE_URL: !Sub >-
+            {{resolve:secretsmanager:${DbSecretArn}:SecretString:DATABASE_URL::}}
+      VpcConfig: !If
+        - HasVpcConfig
+        - SecurityGroupIds: !Ref VpcSecurityGroupIds
+          SubnetIds: !Ref VpcSubnetIds
+        - !Ref AWS::NoValue
+
+Outputs:
+  ApiEndpoint:
+    Description: "Backend API endpoint"
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/"
