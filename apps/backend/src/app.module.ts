@@ -5,12 +5,14 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { ConfigModule } from "@nestjs/config";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { join } from "node:path";
+import { LoggingModule } from "./logging/logging.module";
 
 const isDev = process.env.NODE_ENV !== "production";
 
 @Module({
 	imports: [
 		PrismaModule,
+		LoggingModule,
 		UsersModule,
 		ConfigModule.forRoot({
 			isGlobal: true,

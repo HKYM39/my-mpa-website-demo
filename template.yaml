@@ -17,26 +17,9 @@ Parameters:
   StageName:
     Type: String
     Default: prod
-
   DbSecretArn:
     Type: String
     Description: ARN of Secrets Manager secret which contains DATABASE_URL
-
-  VpcSubnetIds:
-    Type: CommaDelimitedList
-    Default: ""
-    Description: Private subnet IDs for Lambda to reach RDS (optional)
-
-  VpcSecurityGroupIds:
-    Type: CommaDelimitedList
-    Default: ""
-    Description: Security group IDs for Lambda (optional)
-
-Conditions:
-  HasVpcConfig: !Not
-    - !Equals
-      - !Select [0, !Ref VpcSubnetIds]
-      - ""
 
 Resources:
   BackendDepsLayer:
@@ -49,8 +32,6 @@ Resources:
 
   HttpApi:
     Type: AWS::Serverless::HttpApi
-    Properties:
-      StageName: !Ref StageName
 
   BackendFunction:
     Type: AWS::Serverless::Function
@@ -71,19 +52,25 @@ Resources:
             ApiId: !Ref HttpApi
             Path: /{proxy+}
             Method: ANY
+
       Layers:
         - !Ref BackendDepsLayer
       Environment:
         Variables:
           DATABASE_URL: !Sub >-
             {{resolve:secretsmanager:${DbSecretArn}:SecretString:DATABASE_URL::}}
-      VpcConfig: !If
-        - HasVpcConfig
-        - SecurityGroupIds: !Ref VpcSecurityGroupIds
-          SubnetIds: !Ref VpcSubnetIds
-        - !Ref AWS::NoValue
+          NODE_ENV: production
+          NODE_EXTRA_CA_CERTS: /var/task/certs/db-ca.pem
+
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0bd59a9585f8213d1
+        SubnetIds:
+          - subnet-06f091e5f10251f23
+          - subnet-0c2a8a71ac973490d
+          - subnet-050a4c17723fe6caf
 
 Outputs:
   ApiEndpoint:
     Description: "Backend API endpoint"
-    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/${StageName}/"
+    Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/"

@@ -1,0 +1,12 @@
+version = 0.1
+
+[default.deploy.parameters]
+stack_name = "sam-mpa-app"
+resolve_s3 = true
+s3_prefix = "sam-mpa-app"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "StageName=\"prod\" DbSecretArn=\"arn:aws:secretsmanager:us-west-2:012169729906:secret:prod/backend/rds-odHHwt\""
+image_repositories = []
+
+[default.global.parameters]
+region = "us-west-2"

@@ -1,6 +1,6 @@
 {
   "BackendFunction": {
-    "DATABASE_URL": "postgresql://appuser:StrongPassword123!@localhost:5432/appdb?schema=public",
+    "DATABASE_URL": "postgresql://postgres:Zb2J3kHTc6rZVln2PSJL@database-1.c9yaua0sckc9.us-west-2.rds.amazonaws.com:5432/appdb?schema=public&sslmode=require",
     "NODE_ENV": "production"
   }
 }
